@@ -699,6 +699,12 @@ namespace physx
 			NewPoint newPoints[WARP_SIZE * MAX_CONVEX_CONTACTS];
 			Point tmpBuffer[8];
 
+                        __device__ void placementInit(PxU32 NumPatches = 0, PxU32 NumPoints = 0, PxReal SameNormal = 0.999f) { 
+                            mNumPatches = NumPatches;
+                            mNumPoints = NumPoints;
+                            SAME_NORMAL = SameNormal;
+                        }
+
 			__device__ void addPoints(const PxVec3& normal, PxVec3 points[Gu::MAX_CONVEX_CONTACTS],
 				PxReal dists[Gu::MAX_CONVEX_CONTACTS], PxU32 numPoints, const PxTransform& transform)
 			{
@@ -982,7 +988,7 @@ void convexCoreTrimeshNphase_Kernel32(
 		convexBounds = convex.computeBounds();
 		convexBounds.fattenFast(in.contactDist);
 		trimesh = TestTrimesh(TrimeshBvh(in.shape1));
-		contact = Gu::Contact32();
+                contact.placementInit(0,0, 0.999f);
 		_sh.contactLock = 0;
 	}
 
